@@ -15,25 +15,19 @@ function playRound(computerSelection, playerSelection) {
   const c = computerSelection.toLowerCase();
   const p = playerSelection.toLowerCase();
   let result;
-  // rock vs Scissors
+
   if (c === 'rock' && p === 'scissors'){
     result = ["You Lose! Rock beats Scissors.", 1, 0];
-  // paper vs Rock
   } else if (c === 'paper' && p === 'rock'){
     result = ["You Lose! Paper beats Rock.", 1, 0];
-  // scissors vs Paper
   } else if (c === "scissors" && p === "paper"){
     result = ["You Lose! Scissors beats Paper.", 1, 0];
-  // rock vs Paper
 } else if (c === "rock" && p === "paper"){
     result = ["You Win! Paper beats Rock.", 0, 1];
-  // paper vs scissors
 } else if (c === "paper" && p === "scissors"){
     result = ["You Win! Scissors beats Paper.", 0, 1];
-  // scissors vs rock
 } else if (c === "scissors" && p === "rock"){
     result = ["You Win! Rock beats Scissors.", 0, 1];
-  //draw
 } else if(c == p){
     result = [`Draw! ${c} draws with ${p}.`, 0, 0];
   }

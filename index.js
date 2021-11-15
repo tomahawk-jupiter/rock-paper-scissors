@@ -3,11 +3,9 @@
 
 // 1. A function that returns the computers move.
 function computerPlay() {
-  // array of possible moves.
   const movesArray = ['rock', 'paper', 'scissors'];
   // get a random number between 0 and 3.
   const randomNum = Math.floor(Math.random() * 3);
-  // get a random idex from array.
   return movesArray[randomNum];
 }
 
@@ -16,61 +14,66 @@ function playRound(computerSelection, playerSelection) {
   // Case insensitive
   const c = computerSelection.toLowerCase();
   const p = playerSelection.toLowerCase();
-
-  // I'm sure theres a more elegant way to get the result without chaining so many if/else statements!?
-  
+  let result;
   // rock vs Scissors
   if (c === 'rock' && p === 'scissors'){
-    return "You Lose! Rock beats Scissors.";
+    result = ["You Lose! Rock beats Scissors.", 1, 0];
   // paper vs Rock
   } else if (c === 'paper' && p === 'rock'){
-    return "You Lose! Paper beats Rock.";
+    result = ["You Lose! Paper beats Rock.", 1, 0];
   // scissors vs Paper
   } else if (c === "scissors" && p === "paper"){
-    return "You Lose! Scissors beats Paper.";
+    result = ["You Lose! Scissors beats Paper.", 1, 0];
   // rock vs Paper
 } else if (c === "rock" && p === "paper"){
-    return "You Win! Paper beats Rock.";
+    result = ["You Win! Paper beats Rock.", 0, 1];
   // paper vs scissors
 } else if (c === "paper" && p === "scissors"){
-    return "You Win! Scissors beats Paper.";
+    result = ["You Win! Scissors beats Paper.", 0, 1];
   // scissors vs rock
 } else if (c === "scissors" && p === "rock"){
-    return "You Win! Rock beats Scissors.";
+    result = ["You Win! Rock beats Scissors.", 0, 1];
   //draw
 } else if(c == p){
-    return `Draw! ${c} draws with ${p}.`;
+    result = [`Draw! ${c} draws with ${p}.`, 0, 0];
+  }
+  // The numbers in the returned array are used to tally scores
+  return result;
+}
+
+const displayResult = document.querySelector('.result');
+let playerScoreCount = 0;
+let computerScoreCount = 0;
+
+const handleClick = (e) => {
+  const playerMove = e.target.value;
+  const computerMove = computerPlay();
+  const roundResult = playRound(computerMove, playerMove);
+  let playerScore = document.querySelector('.playerScore');
+  let computerScore = document.querySelector('.computerScore');
+
+  playerScoreCount += roundResult[2];
+  computerScoreCount += roundResult[1];
+
+  displayResult.innerText = roundResult[0];
+  playerScore.innerText = playerScoreCount;
+  computerScore.innerText = computerScoreCount;
+
+  // End the game when score gets to 5
+  // Reset scores to start new game
+  if(playerScoreCount >= 5){
+    displayResult.innerText = 'You won the game! Click to play again.';
+    playerScoreCount = 0;
+    computerScoreCount = 0;
+  }
+  if(computerScoreCount >= 5){
+    displayResult.innerText = 'You lost the game! Click to play again.';
+    playerScoreCount = 0;
+    computerScoreCount = 0;
   }
 }
 
-// 3. A function that plays 5 rounds.
-function game() {
-  let computerScore = 0;
-  let playerScore = 0;
-
-  for (let round = 0; round < 5; round ++){
-    const compMove = computerPlay();
-    const playerMove = prompt("Please enter Rock, Paper, or Scissors:");
-    const resultString = playRound(compMove, playerMove);
-
-    // get the result of the round and add a point to the scores
-    const winLose = resultString.split(" ")[1];
-    if (winLose === 'Win!'){
-      playerScore ++;
-    } else if (winLose === 'Lose!'){
-      computerScore ++;
-    }
-    // show result of round in the console
-    console.log(resultString);
-  }
-
-  // Get the game result
-  const gameResult =  playerScore > computerScore? "You won the game!"
-  : playerScore < computerScore? "You lost the game!"
-  : "Game was a draw!";
-
-  // Show result of game in the console
-  console.log(gameResult);
-}
-
-game();
+const playButton = document.querySelectorAll('button');
+playButton.forEach(btn => {
+  btn.addEventListener('click', handleClick);
+});
